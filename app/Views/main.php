@@ -4,11 +4,11 @@
       <i class="ri-menu-line"></i>
     </button>
     <ul class="flex items-center text-sm ml-4">
-      <li class="mr-2">
-        <a href="#" class="text-gray-400 hover:text-gray-600 font-medium">Inicio</a>
-      </li>
-      <li class="text-gray-600 mr-2 font-medium">/</li>
       <li class="text-gray-600 mr-2 font-medium">Crud punto de venta</li>
+      <li class="text-gray-600 mr-2 font-medium">/</li>
+      <li class="text-gray-600 mr-2 font-medium">
+        <?= $ruta ?>
+      </li>
     </ul>
     <ul class="ml-auto flex items-center">
       <li class="dropdown ml-3">
@@ -23,11 +23,8 @@
           </li>
       </li>
     </ul>
-    </li>
-    </ul>
   </div>
   <div class="py-6 px-8 bg-white min-h-screen">
     <?= $contenido ?>
   </div>
-
 </main>

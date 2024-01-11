@@ -259,6 +259,8 @@ SELECT
 /*
   COMANDOS PARA CREAR MIGRACIONES EN PHP CON SPARK
   php spark make:migration Create_Categoria_Producto_Table
-
   php spark migrate
+
+  COMANDOS PARA CREAR CONTROLADORES EN PHP CON SPARK
+  php spark make:controller Productos
  */

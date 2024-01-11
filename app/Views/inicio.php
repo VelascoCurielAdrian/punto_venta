@@ -15,7 +15,10 @@
 
 <body>
   <div class="controller">
-    <h1>Inicio Crud de punto de venta</h1>
+    <a href="coppel" class="flex items-center h-full justify-center pb-4 border-b border-b-gray-800">
+      <img src="https://aforecoppel.com/wp-content/themes/afore-coppel-theme/assets/svg/logo.svg" alt=""
+        class="w-auto h-10 rounded object-cover">
+    </a>
   </div>
 </body>
 
