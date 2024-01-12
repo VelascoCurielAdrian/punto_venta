@@ -5,15 +5,21 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-// $routes->get('coppel', 'Home::index');
+
+$routes->get('coppel', 'Home::index');
 
 
-// $routes->resource('categoriaProductos', ['controller' => '/App/Controllers/CategoriaProductos.php']);
+$routes->group("api/v1/", function ($routes) {
+  // Rutas Publicas
+  $routes->post('registro', 'RegistroController::create');
+  $routes->post('login', 'LoginController::create');
 
-$routes->get('categoriaProductos', 'CategoriaProductos::index');
-$routes->get('categoriaProductos/show/(:num)', 'CategoriaProductos::show/$1');
-$routes->post('categoriaProductos', 'CategoriaProductos::create');
-$routes->put('categoriaProductos/(:num)', 'CategoriaProductos::update/$1');
+  // Rutas Privadas
+  $routes->get('categoriaProductos', 'CategoriaProductoController::index', ['filter' => 'authFilter']);
+  $routes->get('categoriaProductos/show/(:num)', 'CategoriaProductoController::show/$1', ['filter' => 'authFilter']);
+  $routes->post('categoriaProductos', 'CategoriaProductoController::create', ['filter' => 'authFilter']);
+  $routes->put('categoriaProductos/(:num)', 'CategoriaProductoController::update/$1', ['filter' => 'authFilter']);
+  $routes->delete('categoriaProductos/(:num)', 'CategoriaProductoController::delete/$1', ['filter' => 'authFilter']);
 
-
+});
 

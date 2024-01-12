@@ -5,15 +5,15 @@ namespace App\Controllers;
 use App\Helpers\ResponseHelper;
 use App\Helpers\Messages;
 
-use App\Models\CategoriaProductoModelo;
+use App\Models\CategoriaProductoModel;
 use CodeIgniter\RESTful\ResourceController;
 
-class CategoriaProductos extends ResourceController
+class CategoriaProductoController extends ResourceController
 {
 	public function index()
 	{
 		try {
-			$categoriaProductoModel = new CategoriaProductoModelo();
+			$categoriaProductoModel = new CategoriaProductoModel();
 			$resultado = $categoriaProductoModel->categoriasActivas();
 			return $this->respond(ResponseHelper::success(200, $resultado, Messages::SUCCESS, ));
 		} catch (\Exception $e) {
@@ -29,7 +29,7 @@ class CategoriaProductos extends ResourceController
 				return $this->respond(ResponseHelper::error(404, 'Se requiere un ID para esta operación.'));
 			}
 
-			$categoriaProductoModel = new CategoriaProductoModelo();
+			$categoriaProductoModel = new CategoriaProductoModel();
 			$categoria = $categoriaProductoModel->categoriaProductoByID($id);
 
 			if ($categoria === null) {
@@ -46,10 +46,11 @@ class CategoriaProductos extends ResourceController
 	public function create()
 	{
 		try {
-			$nombre = $this->request->getPost('nombre');
-			$descripcion = $this->request->getPost('descripcion');
+			$body = $this->request->getJSON();
+			$nombre = $body->nombre;
+			$descripcion = $body->descripcion;
 
-			$categoriaProductoModel = new CategoriaProductoModelo();
+			$categoriaProductoModel = new CategoriaProductoModel();
 			$validationResult = $categoriaProductoModel->validate(['nombre' => $nombre, 'descripcion' => $descripcion]);
 
 			if (!$validationResult) {
@@ -67,12 +68,12 @@ class CategoriaProductos extends ResourceController
 	public function update($id = null)
 	{
 		try {
-			$categoriaProductoModel = new CategoriaProductoModelo();
-			$body = [
-				'nombre' => $this->request->getVar('nombre'),
-				'descripcion' => $this->request->getVar('descripcion'),
-				'estatus' => $this->request->getVar('estatus'),
-			];
+			$categoriaProductoModel = new CategoriaProductoModel();
+
+			$body = $this->request->getJSON();
+			$nombre = $body->nombre;
+			$descripcion = $body->descripcion;
+			$estatus = $body->estatus;
 
 			$categoria = $categoriaProductoModel->categoriaProductoByID($id);
 
@@ -80,10 +81,33 @@ class CategoriaProductos extends ResourceController
 				return $this->respond(ResponseHelper::error(404, 'No se encontró la categoría para el ID: ' . $id));
 			}
 
-			// $categoriaProductoModel->actualizarCategoria($nombre, $descripcion, $id, $estatus);
+			$validationResult = $categoriaProductoModel->validate(['nombre' => $nombre, 'descripcion' => $descripcion]);
 
+			if (!$validationResult) {
+				return $this->respond(ResponseHelper::error(400, $categoriaProductoModel->errors()));
+			}
+
+			$categoriaProductoModel->actualizarCategoria($nombre, $descripcion, $id, $estatus);
 			return $this->respond(ResponseHelper::success(200, $body, Messages::SUCCESS));
 
+		} catch (\Exception $e) {
+			$errorMessage = $e->getMessage();
+			return $this->respond(ResponseHelper::error(500, $errorMessage));
+		}
+	}
+
+	public function destroy($id = null)
+	{
+		try {
+			$categoriaProductoModel = new CategoriaProductoModel();
+			$categoria = $categoriaProductoModel->categoriaProductoByID($id);
+
+			if ($categoria === null) {
+				return $this->respond(ResponseHelper::error(404, 'No se encontró la categoría para el ID: ' . $id));
+			}
+
+			$categoriaProductoModel->eliminarCategoria($id);
+			return $this->respond(ResponseHelper::success(200, ['deleted' => true], Messages::SUCCESS));
 		} catch (\Exception $e) {
 			$errorMessage = $e->getMessage();
 			return $this->respond(ResponseHelper::error(500, $errorMessage));

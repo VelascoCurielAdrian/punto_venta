@@ -21,13 +21,24 @@ CREATE TABLE producto (
   FOREIGN KEY (categoria_id) REFERENCES categoria_producto(id)
 );
 
+CREATE TABLE usuario (
+  id serial PRIMARY KEY,
+  nombre_completo VARCHAR(50) NOT NULL,
+  usuario VARCHAR(250) NOT NULL,
+  password VARCHAR(250) NOT NULL,
+  estatus BOOLEAN NOT NULL DEFAULT TRUE,
+  activo BOOLEAN NOT NULL DEFAULT TRUE,
+  fechaRegistro TIMESTAMP NOT NULL DEFAULT NOW(),
+  fechaModificacion TIMESTAMP
+);
+
 --FUNCIÓN PARA CREAR UNA CATEGORIA PRODUCTO
 --==========================================================
 CREATE
 OR REPLACE FUNCTION crear_categoria(
   nombre VARCHAR(100),
   descripcion VARCHAR(250)
-) RETURNS INTEGER AS $ $ DECLARE nuevo_id INTEGER;
+) RETURNS INTEGER AS $$ DECLARE nuevo_id INTEGER;
 
 BEGIN
 INSERT INTO
@@ -39,7 +50,7 @@ RETURN nuevo_id;
 
 END;
 
-$ $ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
 
 --EJECUTABLE
 --==========================================================
@@ -60,7 +71,7 @@ OR REPLACE FUNCTION actualizar_categoria(
   descripcion VARCHAR(250),
   categoria_id INTEGER,
   estatus BOOLEAN
-) RETURNS BOOLEAN AS $ $ BEGIN
+) RETURNS BOOLEAN AS $$ BEGIN
 UPDATE
   categoria_producto
 SET
@@ -74,7 +85,7 @@ RETURN FOUND;
 
 END;
 
-$ $ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
 
 --EJECUTABLE
 --==========================================================
@@ -94,7 +105,7 @@ OR REPLACE FUNCTION consultar_categoria(categoria_id INTEGER) RETURNS TABLE (
   nombre VARCHAR(50),
   descripcion VARCHAR(250),
   estatus BOOLEAN
-) as $ $ BEGIN RETURN QUERY
+) as $$ BEGIN RETURN QUERY
 SELECT
   ct_prd.id,
   ct_prd.nombre,
@@ -107,7 +118,7 @@ WHERE
 
 END;
 
-$ $ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
 
 --EJECUTABLE
 --==========================================================
@@ -117,7 +128,7 @@ SELECT
 --FUNCIÓN PARA ELIMINAR UNA CATEGORIA PRODUCTO
 --==========================================================
 CREATE
-OR REPLACE FUNCTION eliminar_categoria(categoria_id INTEGER) RETURNS BOOLEAN AS $ $ BEGIN
+OR REPLACE FUNCTION eliminar_categoria(categoria_id INTEGER) RETURNS BOOLEAN AS $$ BEGIN
 UPDATE
   categoria_producto
 SET
@@ -129,7 +140,7 @@ RETURN FOUND;
 
 END;
 
-$ $ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
 
 --EJECUTABLE
 --==========================================================
@@ -144,7 +155,7 @@ OR REPLACE FUNCTION crear_producto(
   descripcion VARCHAR(250),
   precio DECIMAL(10, 2),
   categoria_id INTEGER
-) RETURNS INTEGER AS $ $ DECLARE nuevo_id INTEGER;
+) RETURNS INTEGER AS $$ DECLARE nuevo_id INTEGER;
 
 BEGIN
 INSERT INTO
@@ -156,7 +167,7 @@ RETURN nuevo_id;
 
 END;
 
-$ $ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
 
 --EJECUTABLE
 --==========================================================
@@ -179,7 +190,7 @@ OR REPLACE FUNCTION actualizar_producto(
   categoria_id INTEGER,
   estatus BOOLEAN,
   productoID INTEGER
-) RETURNS BOOLEAN AS $ $ BEGIN
+) RETURNS BOOLEAN AS $$ BEGIN
 UPDATE
   producto
 SET
@@ -195,7 +206,7 @@ RETURN FOUND;
 
 END;
 
-$ $ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
 
 --EJECUTABLE
 --==========================================================
@@ -212,7 +223,7 @@ OR REPLACE FUNCTION consultar_producto(productoID INTEGER) RETURNS TABLE (
   precio DECIMAL(10, 2),
   estatus BOOLEAN,
   categoria_id INTEGER
-) as $ $ BEGIN RETURN QUERY
+) as $$ BEGIN RETURN QUERY
 SELECT
   prd.id,
   prd.nombre,
@@ -227,7 +238,7 @@ WHERE
 
 END;
 
-$ $ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
 
 --EJECUTABLE
 --==========================================================
@@ -237,7 +248,7 @@ SELECT
 --FUNCIÓN PARA ELIMNAR UN PRODUCTO
 --==========================================================
 CREATE
-OR REPLACE FUNCTION eliminar_producto(categoria_id INTEGER) RETURNS BOOLEAN AS $ $ BEGIN
+OR REPLACE FUNCTION eliminar_producto(categoria_id INTEGER) RETURNS BOOLEAN AS $$ BEGIN
 UPDATE
   producto
 SET
@@ -249,7 +260,7 @@ RETURN FOUND;
 
 END;
 
-$ $ LANGUAGE plpgsql;
+$$ LANGUAGE plpgsql;
 
 --EJECUTABLE
 --==========================================================
@@ -257,11 +268,55 @@ SELECT
   eliminar_producto(1);
 
 /*
-  COMANDOS PARA CREAR MIGRACIONES EN PHP CON SPARK
-  php spark make:migration Create_Categoria_Producto_Table
-  php spark migrate
-
-  COMANDOS PARA CREAR CONTROLADORES Y MODELOS EN PHP CON SPARK
-  php spark make:controller Productos
-  php spark make:model Productos
+ COMANDOS PARA CREAR MIGRACIONES EN PHP CON SPARK
+ php spark make:migration Create_Categoria_Producto_Table
+ php spark migrate
+ 
+ COMANDOS PARA CREAR CONTROLADORES Y MODELOS EN PHP CON SPARK
+ php spark make:controller Productos
+ php spark make:model Productos
  */
+--FUNCIÓN PARA REGISTRAR UN USUARIO
+--==========================================================
+CREATE
+OR REPLACE FUNCTION registro_usuario(
+  nombre_completo VARCHAR(50),
+  usuario VARCHAR(250),
+  password VARCHAR(250)
+) RETURNS INTEGER AS $$ DECLARE nuevo_id INTEGER;
+
+BEGIN
+INSERT INTO
+  usuario ("nombre_completo", "usuario", "password")
+VALUES
+  (nombre_completo, usuario, password) RETURNING id INTO nuevo_id;
+
+RETURN nuevo_id;
+
+END;
+
+$$ LANGUAGE plpgsql;
+
+--FUNCIÓN PARA LOGIN DE  UN USUARIO
+--==========================================================
+CREATE
+OR REPLACE FUNCTION login(
+  user_usuario VARCHAR(250),
+  user_password VARCHAR(250)
+) RETURNS TABLE (
+  id INTEGER,
+  nombre_completo VARCHAR(50),
+  usuario VARCHAR(250)
+) as $$ BEGIN RETURN QUERY
+SELECT
+  id,
+  nombre_completo,
+  usuario
+FROM
+  usuario
+WHERE
+  usuario = user_usuario AND password = user_password;
+
+END;
+
+$$ LANGUAGE plpgsql;
