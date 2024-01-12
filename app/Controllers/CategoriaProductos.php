@@ -2,28 +2,28 @@
 
 namespace App\Controllers;
 
-use App\Controllers\BaseController;
 use App\Libraries\Tabla;
+use App\Models\CategoriaProductoModelo;
+use CodeIgniter\RESTful\ResourceController;
+use Hermawan\DataTables\DataTable;
 
-class CategoriaProductos extends BaseController
+class CategoriaProductos extends ResourceController
 {
+
     public function index(): string
     {
+        $header = ['ID', 'Nombre', 'Descripción', 'Estatus'];
 
-        $header = ['Nombre', 'Descripción', 'Estatus'];
-        $rows = [
-            ['Producto 1', 'Descripción del Producto 1', 'Disponible'],
-            ['Producto 2', 'Descripción del Producto 2', 'Agotado'],
-            ['Producto 3', 'Descripción del Producto 3', 'Disponible'],
-        ];
+        $categoriaProductoModel = new CategoriaProductoModelo();
+
+
+        $resultado = $categoriaProductoModel->categoriasActivas();
 
         // Instanciar la clase TablaReutilizable
-        $tablaReutilizable = new Tabla();
+        $componenteTabla = new Tabla();
 
         // Generar la tabla HTML
-        $tablaHTML = $tablaReutilizable->generarTabla($header, $rows);
-
-
+        $tablaHTML = $componenteTabla->generarTabla($header, $resultado);
         $data = [
             'contenido' => view('categoria_productos', ['tablaHTML' => $tablaHTML]),
             'ruta' => 'Categoria de productos'

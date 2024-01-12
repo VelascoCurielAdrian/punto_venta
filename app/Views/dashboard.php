@@ -7,6 +7,8 @@
   <title>Coppel</title>
   <link href="https://cdn.jsdelivr.net/npm/remixicon@4.0.0/fonts/remixicon.css" rel="stylesheet" />
   <link rel="stylesheet" href="css/output.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+
 </head>
 
 
@@ -45,6 +47,8 @@
   <?php include 'main.php'; ?>
   <!-- Finf de main -->
   <script src="js/dashboard.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
 </body>
 
 </html>

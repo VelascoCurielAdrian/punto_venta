@@ -19,6 +19,7 @@
               class="block w-full rounded-md border-0 py-1.5 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-1 focus:ring-inset">
           </div>
         </div>
+
         <div class="sm:col-span-2">
           <label for="country" class="block text-sm font-medium leading-6 text-gray-900">Estatus</label>
           <div class="mt-2">
@@ -29,7 +30,8 @@
             </select>
           </div>
         </div>
-        <div class="sm: col-span-6">
+
+        <div class="sm:col-span-6">
           <div class="mt-6 flex items-center justify-end gap-x-6">
             <button type="button"
               class="rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600">

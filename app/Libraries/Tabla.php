@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Libraries;
 
 class Tabla
@@ -19,6 +20,7 @@ class Tabla
     }
 
     $html .= '</tr></thead><tbody>';
+
     // Agregar filas de datos
     foreach ($data as $fila) {
       $html .= '<tr>';
@@ -27,7 +29,7 @@ class Tabla
       }
       $html .= '</tr>';
     }
-    
+
     $html .= '</tbody></table>';
 
     return $html;

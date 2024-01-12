@@ -16,6 +16,8 @@ class App extends BaseConfig
      *
      *    http://example.com/
      */
+    public $environment = 'development';
+
     public string $baseURL = 'http://localhost:8080/';
 
     /**
@@ -174,4 +176,6 @@ class App extends BaseConfig
      * @see http://www.w3.org/TR/CSP/
      */
     public bool $CSPEnabled = false;
+
+    public $enableAutoInject = true;
 }
