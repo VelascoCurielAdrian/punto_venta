@@ -2,7 +2,6 @@
 
 namespace App\Controllers;
 
-use App\Controllers\BaseController;
 use App\Helpers\Messages;
 use App\Helpers\ResponseHelper;
 use App\Models\RegistroModel;
@@ -28,6 +27,14 @@ class RegistroController extends ResourceController
 
             if (!$validationResult) {
                 return $this->respond(ResponseHelper::error(400, $registroModel->errors()));
+            }
+
+            $usuarioBD = $registroModel->consultarUsuario($usuario);
+
+            if($usuarioBD) {
+                return $this->response
+                ->setStatusCode(409)
+                ->setJSON(ResponseHelper::error(409, 'El usuario ya existe'));
             }
 
             $nuevoId = $registroModel->registroUsuario(

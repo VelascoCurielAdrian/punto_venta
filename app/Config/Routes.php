@@ -6,7 +6,9 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 
-$routes->get('coppel', 'Home::index');
+$routes->get('/login', 'LoginController::index');
+
+$routes->get('/', 'Home::index');
 
 
 $routes->group("api/v1/", function ($routes) {
@@ -20,6 +22,5 @@ $routes->group("api/v1/", function ($routes) {
   $routes->post('categoriaProductos', 'CategoriaProductoController::create', ['filter' => 'authFilter']);
   $routes->put('categoriaProductos/(:num)', 'CategoriaProductoController::update/$1', ['filter' => 'authFilter']);
   $routes->delete('categoriaProductos/(:num)', 'CategoriaProductoController::delete/$1', ['filter' => 'authFilter']);
-
 });
 

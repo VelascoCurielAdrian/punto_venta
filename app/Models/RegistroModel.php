@@ -39,6 +39,13 @@ class RegistroModel extends Model
     protected $skipValidation = false;
     protected $cleanValidationRules = true;
 
+    public function consultarUsuario($usuario)
+    {
+        $this->select('id, nombre_completo, usuario, password');
+        $this->where('usuario', $usuario);
+        return $this->first();
+    }
+
     public function registroUsuario($nombre_completo, $usuario, $password)
     {
         $query = $this->db->query('SELECT registro_usuario(?, ?, ?) as nuevo_id', array($nombre_completo, $usuario, $password));

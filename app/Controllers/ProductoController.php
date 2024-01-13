@@ -2,10 +2,9 @@
 
 namespace App\Controllers;
 
-use App\Controllers\BaseController;
-use CodeIgniter\HTTP\ResponseInterface;
+use CodeIgniter\RESTful\ResourceController;
 
-class ProductoController extends BaseController
+class ProductoController extends ResourceController
 {
     public function index()
     {

@@ -12,7 +12,7 @@ class LoginController extends ResourceController
 {
     public function index()
     {
-        //
+        return view('Login');
     }
 
     public function create()
@@ -32,12 +32,16 @@ class LoginController extends ResourceController
             $usuarioBD = $loginModel->login($usuario);
 
             if (!$usuarioBD) {
-                return $this->respond(ResponseHelper::error(409, 'El usuario no existe'));
+                return $this->response
+                    ->setStatusCode(409)
+                    ->setJSON(ResponseHelper::error(409, 'El usuario no existe'));
             }
 
             $verifcar_pasword = password_verify($password, $usuarioBD['password']);
             if (!$verifcar_pasword) {
-                return $this->respond(ResponseHelper::error(409, 'Contraseña incorrecta'));
+                return $this->response
+                    ->setStatusCode(409)
+                    ->setJSON(ResponseHelper::error(409, 'Contraseña incorrecta'));
             }
 
             $key = getenv('JWT_SECRET');
@@ -57,8 +61,8 @@ class LoginController extends ResourceController
 
             $response = [
                 'usuarioBD' => [
-                    'usuario'=> $usuarioBD['usuario'],
-                    'nombre_completo'=> $usuarioBD['nombre_completo'],
+                    'usuario' => $usuarioBD['usuario'],
+                    'nombre_completo' => $usuarioBD['nombre_completo'],
                 ],
                 'token' => $token
             ];
